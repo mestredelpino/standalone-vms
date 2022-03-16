@@ -25,3 +25,9 @@ concourse-password     = "" # The Password of the concourse admin
 concourse-static-ip    = "" # The Static IP address to be used by Concourse (not available yet)
 
 ```
+
+## Create a standalone Concourse virtual machine
+
+1. Navigate to the *"concourse"* directory
+2. Execute `terraform init`
+3. Execute `terraform apply`
