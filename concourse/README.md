@@ -1,4 +1,4 @@
-# Standalone Concourse on kind
+# Standalone Concourse on k3s
 This terraform scripts allows you to deploy a Concourse virtual machine with terraform on your vSphere environment. 
 
 ## Set up variables
