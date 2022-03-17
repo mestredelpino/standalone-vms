@@ -59,7 +59,7 @@ resource "local_file" "env_file" {
 
 
 resource "vsphere_virtual_machine" "concourse-cp" {
-  name                       = "concourse-cp"
+  name                       = var.vm-name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   datacenter_id              = data.vsphere_datacenter.dc.id
@@ -98,8 +98,8 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
   vapp {
     properties = {
-      "instance-id" = "concourse-cp"
-      "hostname"    = "concourse-cp"
+      "instance-id" = var.vm-name
+      "hostname"    = var.vm-name
       "public-keys" = file("~/.ssh/id_rsa.pub")
     }
   }
@@ -125,7 +125,7 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${vsphere_virtual_machine.concourse-cp.default_ip_address} jumpbox | sudo tee -a /etc/hosts",
+      "echo ${vsphere_virtual_machine.concourse-cp.default_ip_address} concourse | sudo tee -a /etc/hosts",
       "chmod +x /home/ubuntu/concourse-setup.sh",
       "sh /home/ubuntu/concourse-setup.sh",
       "rm /home/ubuntu/concourse-setup.sh",
@@ -243,7 +243,7 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
 #   provisioner "remote-exec" {
 #     inline = [
-#       "echo ${vsphere_virtual_machine.concourse-cp.default_ip_address} jumpbox | sudo tee -a /etc/hosts",
+#       "echo ${vsphere_virtual_machine.concourse-cp.default_ip_address} concourse | sudo tee -a /etc/hosts",
 #       "chmod +x /home/ubuntu/concourse-setup.sh",
 #       "sh /home/ubuntu/concourse-setup.sh",
 #       "rm /home/ubuntu/concourse-setup.sh",

@@ -45,6 +45,11 @@ variable "vm-folder" {
   type = string
 }
 
+variable "vm-name" {
+  description = "The name of the concourse VM" 
+  type = string
+}
+
 variable "concourse-fqdn" {
   description = "The fqdn for your Concourse deployment"
   type = string

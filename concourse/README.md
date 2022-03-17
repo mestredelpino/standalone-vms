@@ -21,6 +21,7 @@ vsphere-network        = "" # The network segment to be used by this virtual mac
 vsphere-network-cidr   = "" # The CIDR of the "vsphere-network"
 
 vm-folder              = "" # The name of the vSphere folder which will contain the Concourse virtual machine
+vm-name                = "" # The name of the concourse VM
 
 concourse-fqdn         = "" # The FQDN of your Concourse deployment
 ```
@@ -47,6 +48,7 @@ vsphere-network        = "" # The network segment to be used by this virtual mac
 vsphere-network-cidr   = "" # The CIDR of the "vsphere-network"
 
 vm-folder              = "" # The name of the vSphere folder which will contain the Concourse virtual machine
+vm-name                = "" # The name of the concourse VM
 
 concourse-fqdn         = "" # The FQDN of your Concourse deployment
 
