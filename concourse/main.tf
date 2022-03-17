@@ -53,6 +53,15 @@ resource "local_file" "env_file" {
   file_permission = "0644"
 }
 
+resource "local_file" "ingress_file" {
+  content = templatefile("ingress.tpl", {
+    concourse-fqdn = var.concourse-fqdn
+ 
+  })
+  filename        = "ingress.yaml"
+  file_permission = "0644"
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # Deploy Concourse (DHCP)
 # ---------------------------------------------------------------------------------------------------------------------
@@ -113,6 +122,11 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
   provisioner "file" {
     # Copy additional configuration file.
+    source      = "ingress.yaml"
+    destination = "/home/ubuntu/ingress.yaml"
+  }
+  provisioner "file" {
+    # Copy additional configuration file.
     source      = "env"
     destination = "/home/ubuntu/.env"
   }
@@ -128,7 +142,7 @@ resource "vsphere_virtual_machine" "concourse-cp" {
       "echo ${vsphere_virtual_machine.concourse-cp.default_ip_address} concourse | sudo tee -a /etc/hosts",
       "chmod +x /home/ubuntu/concourse-setup.sh",
       "sh /home/ubuntu/concourse-setup.sh",
-      "rm /home/ubuntu/concourse-setup.sh",
+      # "rm /home/ubuntu/concourse-setup.sh",
     ]
     on_failure = continue
   }
