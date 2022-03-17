@@ -3,9 +3,11 @@
 
 This terraform scripts allows you to deploy a Concourse virtual machine on your vSphere environment. 
 
-## Set up variables
 
-Create a terraform.tfvars file in the "concourse" directory, containing the following:
+
+## Create a standalone Concourse virtual machine (DHCP)
+
+1. Create a terraform.tfvars file in the "concourse" directory, containing the following:
 
 ```
 vsphere-user           = "" # The username of the vSphere user to be used for this deployment
@@ -18,18 +20,41 @@ vsphere-host           = "" # The ESXi host you will deploy this virtual machine
 vsphere-network        = "" # The network segment to be used by this virtual machine
 vsphere-network-cidr   = "" # The CIDR of the "vsphere-network"
 
-focal-ova              = "" # The full path to the focal cloud-server image you downloaded
 vm-folder              = "" # The name of the vSphere folder which will contain the Concourse virtual machine
 
 concourse-fqdn         = "" # The FQDN of your Concourse deployment
-concourse-username     = "" # The Username of the concourse admin
-concourse-password     = "" # The Password of the concourse admin
-concourse-static-ip    = "" # The Static IP address to be used by Concourse (not available yet)
+```
+2. Navigate to the *"concourse"* directory
+3. Execute `terraform init`
+4. Execute `terraform apply`
+
+## Create a standalone Concourse virtual machine (Static IP)
+
+
+1. Download the [ubuntu server cloud image OVA](https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.ova) (used for the jumpbox VM) and paste it in the /concourse folder. A template VM will be created, which can then be cloned and assigned a static IP address.
+2. In main.tf, comment all code in the "Deploy Concourse (DHCP)" section and uncomment all code in the "Deploy Concourse (Static IP)" section
+3. Create a terraform.tfvars, file and fill in these values:
 
 ```
+vsphere-user           = "" # The username of the vSphere user to be used for this deployment
+vsphere-password       = "" # The password of the vSphere user to be used for this deployment
+vsphere-server         = "" # The vSphere server (IP address or FQDN)
+vsphere-datacenter     = "" # The vSphere Datacenter you will deploy this virtual machine to
+vsphere-datastore      = "" # The datastore you will deploy this virtual machine to
+vsphere-resource_pool  = "" # The resource pool to be used by this virtual machine
+vsphere-host           = "" # The ESXi host you will deploy this virtual machine to
+vsphere-network        = "" # The network segment to be used by this virtual machine
+vsphere-network-cidr   = "" # The CIDR of the "vsphere-network"
 
-## Create a standalone Concourse virtual machine
+vm-folder              = "" # The name of the vSphere folder which will contain the Concourse virtual machine
 
-1. Navigate to the *"concourse"* directory
-2. Execute `terraform init`
-3. Execute `terraform apply`
+concourse-fqdn         = "" # The FQDN of your Concourse deployment
+
+# Variables for static Concourse deployment 
+concourse-static-ip    = "" # The Static IP address to be used by Concourse (not available yet)
+focal-ova              = "" # The full path to the focal cloud-server image you downloaded
+
+```
+3. Navigate to the *"concourse"* directory
+4. Execute `terraform init`
+5. Execute `terraform apply`

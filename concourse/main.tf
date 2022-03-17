@@ -13,23 +13,10 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
-# ---------------------------------------------------------------------------------------------------------------------
-# Create a linux VM
-# ---------------------------------------------------------------------------------------------------------------------
-
-
 data "vsphere_network" "network" {
   name          = var.vsphere-network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
-
-# data "vsphere_virtual_machine" "ubuntu_template" {
-#   name          = vsphere_virtual_machine.focal-cloudserver.name
-#   datacenter_id = data.vsphere_datacenter.dc.id
-#   depends_on = [
-#     vsphere_virtual_machine.focal-cloudserver
-#   ]
-# }
 
 data "vsphere_datacenter" "dc" {
   name = var.vsphere-datacenter
@@ -50,7 +37,6 @@ data "vsphere_host" "host" {
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
-
 # resource "vsphere_folder" "vm_folder" {
 #   path          = var.vm-folder
 #   type          = "vm"
@@ -67,26 +53,10 @@ resource "local_file" "env_file" {
   file_permission = "0644"
 }
 
-# resource "vsphere_virtual_machine" "focal-cloudserver" {
-#   name                       = "focal-cloudserver-template"
-#   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
-#   datastore_id               = data.vsphere_datastore.datastore.id
-#   host_system_id             = data.vsphere_host.host.id
-#   wait_for_guest_net_timeout = 0
-#   wait_for_guest_ip_timeout  = 0
-#   datacenter_id              = data.vsphere_datacenter.dc.id
-#   network_interface {
-#     network_id = data.vsphere_network.network.id
-#   }
-#   ovf_deploy {
-#     ovf_network_map = {"VM Network": data.vsphere_network.network.id
-#     }
-#     local_ovf_path = var.focal-ova
-#   }
-#   cdrom {
-#     client_device = true
-#   }
-# }
+# ---------------------------------------------------------------------------------------------------------------------
+# Deploy Concourse (DHCP)
+# ---------------------------------------------------------------------------------------------------------------------
+
 
 resource "vsphere_virtual_machine" "concourse-cp" {
   name                       = "concourse-cp"
@@ -101,8 +71,6 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
   network_interface {
     network_id = data.vsphere_network.network.id
-    # ipv4_address = var.concourse-static-ip
-    # ipv4_netmask = 24
   }
   
   disk {
@@ -123,26 +91,6 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
   }
 
-
-#   clone {
-#           ovf_network_map = {"VM Network": data.vsphere_network.network.id
-#     }
-#     # template_uuid = data.vsphere_virtual_machine.ubuntu_template.id
-#        customize {
-
-#       linux_options {
-#         host_name = "concourse"
-#         domain = "magrathea.lab"      
-#       }
-
-#       network_interface {
-#         ipv4_address = var.concourse-static-ip
-#         ipv4_netmask = 24# cidrnetmask("${var.vsphere-network-cidr}")
-#       }
-#       dns_server_list = [ cidrhost(var.vsphere-network-cidr, 1) ]
-#       ipv4_gateway = cidrhost(var.vsphere-network-cidr, 1)
-#     }
-#   } 
   cdrom {
     client_device = true
   }
@@ -181,14 +129,46 @@ resource "vsphere_virtual_machine" "concourse-cp" {
       "chmod +x /home/ubuntu/concourse-setup.sh",
       "sh /home/ubuntu/concourse-setup.sh",
       "rm /home/ubuntu/concourse-setup.sh",
-      # "export ip_address=$(hostname -I | awk '{print $1}')",
-      # "sudo -E kubectl port-forward --namespace default deployment/concourse-web 80:80 --address $ip_address &"
     ]
     on_failure = continue
   }
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# Deploy Concourse (Static IP)
+# ---------------------------------------------------------------------------------------------------------------------
 
+
+
+# resource "vsphere_virtual_machine" "focal-cloudserver" {
+#   name                       = "focal-cloudserver-template"
+#   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
+#   datastore_id               = data.vsphere_datastore.datastore.id
+#   host_system_id             = data.vsphere_host.host.id
+#   wait_for_guest_net_timeout = 0
+#   wait_for_guest_ip_timeout  = 0
+#   datacenter_id              = data.vsphere_datacenter.dc.id
+#   network_interface {
+#     network_id = data.vsphere_network.network.id
+#   }
+#   ovf_deploy {
+#     ovf_network_map = {"VM Network": data.vsphere_network.network.id
+#     }
+#     local_ovf_path = var.focal-ova
+#   }
+#   cdrom {
+#     client_device = true
+#   }
+# }
+
+
+# data "vsphere_virtual_machine" "ubuntu_template" {
+#   name          = vsphere_virtual_machine.focal-cloudserver.name
+#   datacenter_id = data.vsphere_datacenter.dc.id
+#   depends_on = [
+#     vsphere_virtual_machine.focal-cloudserver
+#   ]
+# }
 
 
 # resource "vsphere_virtual_machine" "concourse-cp" {
@@ -200,7 +180,7 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 #   num_cpus                   = 2
 #   memory                     = 6000
 #   guest_id                   = "ubuntu64Guest"
-#   folder                     = vsphere_folder.vm_folder.path
+#   # folder                     = vsphere_folder.vm_folder.path
 
 #   network_interface {
 #     network_id = data.vsphere_network.network.id
@@ -257,7 +237,7 @@ resource "vsphere_virtual_machine" "concourse-cp" {
 
 #   provisioner "file" {
 #     # Copy install scripts.
-#     source      = "./concourse-setup.sh"
+#     source      = "./concourse-setup-k3s.sh"
 #     destination = "/home/ubuntu/concourse-setup.sh"
 #   }
 

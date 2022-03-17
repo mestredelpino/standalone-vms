@@ -31,8 +31,6 @@ sudo apt-get install helm
 
 # Install k3s
 curl -sfL https://get.k3s.io | sh -  
-# sleep 60s
-# k3s kubectl get node
 
 mkdir .kube
 sudo chown -R $USER $HOME/.kube
@@ -45,8 +43,8 @@ helm pull concourse/concourse --untar
 
 # Add the concourse fqdn and enable ingress on port 80
 yq e -i '.concourse.web.bindPort= 80' concourse/values.yaml
-concourse_fqdn="http://$concourse_fqdn" yq e -i ".concourse.web.externalUrl = env(concourse_fqdn)"  concourse/values.yaml
 yq e -i ".concourse.ingress.enabled = true" concourse/values.yaml && concourse_fqdn="$concourse_fqdn" yq e -i ".concourse.ingress.hosts += [ env(concourse_fqdn) ]" concourse/values.yaml
+concourse_fqdn="http://$concourse_fqdn" yq e -i ".concourse.web.externalUrl = env(concourse_fqdn)"  concourse/values.yaml
 
 # Edit the admin user
 concourse_user=$concourse_user yq e -i ".concourse.web.auth.mainTeam.localUser = env(concourse_user)"  concourse/values.yaml

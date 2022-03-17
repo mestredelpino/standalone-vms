@@ -41,9 +41,8 @@ variable "vsphere-network-cidr" {
 }
 
 variable "vm-folder" {
-  description = "The name of the new vSphere folder where the concourse virtual machine will be located"  
+  description = "The name of the new vSphere folder where the concourse virtual machine will be located" 
   type = string
-
 }
 
 variable "concourse-fqdn" {
@@ -54,24 +53,24 @@ variable "concourse-fqdn" {
 variable "concourse-username" {
   description = "User to create"
   type = string
+  default = "test"
 }
 
 variable "concourse-password" {
   description = "Password for the new user"
   type = string
+  default = "test"
   sensitive = true
 }
 
 variable "focal-ova" {
     description = "The path of the focal cloud server OVA file"
     type = string
+    default = ""
 }
 
 variable "concourse-static-ip" {
   description = "The static IP used by the Concourse VM"
   type = string
-  # validation {
-  # condition = can(regex("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",var.vsphere-host))
-  # error_message = "Invalid IP address provided."
-  # }
+  default = "192.168.1.150"
 }
