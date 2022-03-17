@@ -1,10 +1,5 @@
 #!/bin/sh
-if [ ! -f .env ]
-then
-  export $(cat .env | xargs)
-fi
-# . /home/ubuntu/.env
-
+. /home/ubuntu/.env
 
 # Generate a SSH keypair.
 if ! [ -f /home/ubuntu/.ssh/id_rsa ]; then echo "true"
@@ -58,7 +53,8 @@ concourse_credentials="$concourse_username:$concourse_password" yq e -i ".secret
 helm install concourse concourse/concourse --values concourse/values.yaml
 
 # Create an ingress object
-kubectl create ingress simple --rule="$concourse_fqdn/*=concourse-web:80"
+kubectl create ingress simple --rule=""$concourse_fqdn"/*=concourse-web:80"
+
 
 # Wait until concourse is available
 export concourse_deployment=$(kubectl get deployments --namespace default -l "app=concourse-web" -o jsonpath="{.items[0].metadata.name}")
