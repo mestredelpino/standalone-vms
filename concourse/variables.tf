@@ -79,3 +79,7 @@ variable "concourse-static-ip" {
   type = string
   default = "192.168.1.150"
 }
+
+variable "dhcp-concourse" {
+  default = false
+}
