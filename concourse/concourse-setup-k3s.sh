@@ -52,9 +52,13 @@ concourse_credentials="$concourse_username:$concourse_password" yq e -i ".secret
 
 helm install concourse concourse/concourse --values concourse/values.yaml
 
-# Create an ingress object
+
+
+# kubectl create ingress simple --rule="concourse.magrathea.lab/*=concourse-web:80" --dry-run=client -o yaml
 kubectl apply -f /home/ubuntu/ingress.yaml
 
+# Create an ingress object
+# kubectl create ingress simple --rule="concourse.magrathea.lab/*=concourse-web:80"
 
 # Wait until concourse is available
 export concourse_deployment=$(kubectl get deployments --namespace default -l "app=concourse-web" -o jsonpath="{.items[0].metadata.name}")
