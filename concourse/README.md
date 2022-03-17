@@ -1,7 +1,7 @@
 # Standalone Concourse on k3s
 ![Alt text](https://github.com/mestredelpino/standalone-vms/blob/main/concourse/concourse.png?raw=true "Concourse")
 
-This terraform scripts allows you to deploy a Concourse virtual machine with terraform on your vSphere environment. 
+This terraform scripts allows you to deploy a Concourse virtual machine on your vSphere environment. 
 
 ## Set up variables
 
