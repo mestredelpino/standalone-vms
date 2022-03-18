@@ -24,6 +24,7 @@ vm-folder              = "" # The name of the vSphere folder which will contain 
 vm-name                = "" # The name of the concourse VM
 
 concourse-fqdn         = "" # The FQDN of your Concourse deployment
+dhcp-concourse         = true # Deploy concourse with dynamic IP address allocation
 ```
 2. Navigate to the *"concourse"* directory
 3. Execute `terraform init`
@@ -33,7 +34,6 @@ concourse-fqdn         = "" # The FQDN of your Concourse deployment
 
 
 1. Download the [ubuntu server cloud image OVA](https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.ova) (used for the jumpbox VM) and paste it in the /concourse folder. A template VM will be created, which can then be cloned and assigned a static IP address.
-2. In main.tf, comment all code in the "Deploy Concourse (DHCP)" section and uncomment all code in the "Deploy Concourse (Static IP)" section
 3. Create a terraform.tfvars, file and fill in these values:
 
 ```
@@ -55,7 +55,7 @@ concourse-fqdn         = "" # The FQDN of your Concourse deployment
 # Variables for static Concourse deployment 
 concourse-static-ip    = "" # The Static IP address to be used by Concourse (not available yet)
 focal-ova              = "" # The full path to the focal cloud-server image you downloaded
-
+dhcp-concourse         = false # Deploy concourse with a static IP address
 ```
 3. Navigate to the *"concourse"* directory
 4. Execute `terraform init`
