@@ -247,6 +247,11 @@ resource "vsphere_virtual_machine" "concourse-cp-static" {
     user        = "ubuntu"
     private_key = file("~/.ssh/id_rsa")
   }
+  provisioner "file" {
+    # Copy additional configuration file.
+    source      = "ingress.yaml"
+    destination = "/home/ubuntu/ingress.yaml"
+  }
 
   provisioner "file" {
     # Copy additional configuration file.

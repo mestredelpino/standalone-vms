@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   creationTimestamp: null
-  name: simple
+  name: concourse-ingress
 spec:
   rules:
   - host: ${concourse-fqdn}
