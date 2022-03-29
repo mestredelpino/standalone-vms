@@ -157,7 +157,7 @@ resource "vsphere_virtual_machine" "concourse-cp-dhcp" {
 
 resource "vsphere_virtual_machine" "focal-cloudserver" {
   count = var.dhcp-concourse ? 0 : 1
-  name                       = "focal-cloudserver-template"
+  name                       = var.focal-cloudserver-name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   host_system_id             = data.vsphere_host.host.id
@@ -191,7 +191,7 @@ data "vsphere_virtual_machine" "ubuntu_template" {
 
 resource "vsphere_virtual_machine" "concourse-cp-static" {
   count = var.dhcp-concourse ? 0 : 1
-  name                       = "concourse-cp"
+  name                       = var.vm-name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   wait_for_guest_net_timeout = -1
@@ -216,7 +216,7 @@ resource "vsphere_virtual_machine" "concourse-cp-static" {
        customize {
 
       linux_options {
-        host_name = "concourse"
+        host_name = var.vm-name
         domain = "magrathea.lab"      
       }
 
@@ -235,8 +235,8 @@ resource "vsphere_virtual_machine" "concourse-cp-static" {
 
   vapp {
     properties = {
-      "instance-id" = "concourse-cp"
-      "hostname"    = "concourse-cp"
+      "instance-id" = var.vm-name
+      "hostname"    = var.vm-name
       "public-keys" = file("~/.ssh/id_rsa.pub")      
     }
   }

@@ -24,7 +24,7 @@ vm-folder              = "" # The name of the vSphere folder which will contain 
 vm-name                = "" # The name of the concourse VM
 
 concourse-fqdn         = "" # The FQDN of your Concourse deployment
-dhcp-concourse         = true # Deploy concourse with dynamic IP address allocation
+dhcp-concourse         = true # Deploy Concourse with dynamic IP address allocation
 ```
 2. Navigate to the *"concourse"* directory
 3. Execute `terraform init`
@@ -55,7 +55,7 @@ concourse-fqdn         = "" # The FQDN of your Concourse deployment
 # Variables for static Concourse deployment 
 concourse-static-ip    = "" # The Static IP address to be used by Concourse (not available yet)
 focal-ova              = "" # The full path to the focal cloud-server image you downloaded
-dhcp-concourse         = false # Deploy concourse with a static IP address
+dhcp-concourse         = false # Deploy Concourse with a static IP address
 ```
 3. Navigate to the *"concourse"* directory
 4. Execute `terraform init`

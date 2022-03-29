@@ -46,7 +46,8 @@ variable "vm-folder" {
 }
 
 variable "vm-name" {
-  description = "The name of the concourse VM" 
+  description = "The name of the concourse VM"
+  default = "concourse-cp"
   type = string
 }
 
@@ -72,6 +73,12 @@ variable "focal-ova" {
     description = "The path of the focal cloud server OVA file"
     type = string
     default = ""
+}
+
+variable "focal-cloudserver-name" {
+  description = "The name of the focal cloud server virtual machine that will be deployed"
+  type = string
+  default = "focal-template"
 }
 
 variable "concourse-static-ip" {
