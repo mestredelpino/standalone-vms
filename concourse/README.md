@@ -55,6 +55,7 @@ concourse-fqdn         = "" # The FQDN of your Concourse deployment
 # Variables for static Concourse deployment 
 concourse-static-ip    = "" # The Static IP address to be used by Concourse (not available yet)
 focal-ova              = "" # The full path to the focal cloud-server image you downloaded
+focal-cloudserver-name = "" # The name of the focal cloud server virtual machine that will be deployed
 dhcp-concourse         = false # Deploy Concourse with a static IP address
 ```
 3. Navigate to the *"concourse"* directory
