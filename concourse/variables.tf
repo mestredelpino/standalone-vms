@@ -69,6 +69,12 @@ variable "concourse-password" {
   sensitive = true
 }
 
+variable "domain" {
+  description = "Your domain to use for the concourse deployment"
+  type = string
+  default = "test"
+}
+
 variable "focal-ova" {
     description = "The path of the focal cloud server OVA file"
     type = string
