@@ -25,6 +25,7 @@ vm-name                = "" # The name of the concourse VM
 
 concourse-fqdn         = "" # The FQDN of your Concourse deployment
 dhcp-concourse         = true # Deploy Concourse with dynamic IP address allocation
+domain                 = "" # Your domain to use for your Concourse VM on vSphere
 ```
 2. Navigate to the *"concourse"* directory
 3. Execute `terraform init`
