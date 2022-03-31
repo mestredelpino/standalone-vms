@@ -217,7 +217,7 @@ resource "vsphere_virtual_machine" "concourse-cp-static" {
 
       linux_options {
         host_name = var.vm-name
-        domain = "magrathea.lab"      
+        domain = var.domain   
       }
 
       network_interface {
