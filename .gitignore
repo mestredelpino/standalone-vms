@@ -34,4 +34,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-ingress.yaml
+
+terraform.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+env
