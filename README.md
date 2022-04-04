@@ -23,8 +23,8 @@ dhcp-vms = {
     cpu : 2,                               # The VM's number of vCPUs
     memory : 4000,                         # The VM's memory in MB
     environment-variables = {              # Environment variables to be passed to your VM (at ~/.env)
-      environment_variable1 = "dummy"      # DNS domain to be used by the Concourse service
-      environment_variable2 = "dummy2"     # Root username to be used by the Concourse service
+      environment_variable1 = "dummy"      # Environment variable example 
+      environment_variable2 = "dummy2"     # Environment variable example 
     }
   }
 }
