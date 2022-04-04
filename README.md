@@ -22,7 +22,6 @@ dhcp-vms = {
     disk : 100,                            # The VM's disk storage in GB
     cpu : 2,                               # The VM's number of vCPUs
     memory : 4000,                         # The VM's memory in MB
-    ip_address : "10.0.0.3"                # The static IP address for this VM
     environment-variables = {              # Environment variables to be passed to your VM (at ~/.env)
       environment_variable1 = "dummy"      # DNS domain to be used by the Concourse service
       environment_variable2 = "dummy2"     # Root username to be used by the Concourse service
