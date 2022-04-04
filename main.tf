@@ -103,7 +103,6 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
     inline = [
       "echo ${self.default_ip_address} ${each.key} | sudo tee -a /etc/hosts",
       "sudo apt update && sudo apt install -y jq & sudo snap install yq",
-      "echo '${jsonencode(each.value.environment-variables[*])}' > variables.json",
       "echo '${jsonencode(each.value.environment-variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
       "sed -i -e 's/\r$//' /home/ubuntu/setup.sh",
       "chmod +x /home/ubuntu/setup.sh",
@@ -214,7 +213,6 @@ resource "vsphere_virtual_machine" "service-vm-static" {
     inline = [
       "echo ${self.default_ip_address} ${each.key} | sudo tee -a /etc/hosts",
       "sudo apt update && sudo apt install -y jq & sudo snap install yq",
-      "echo '${jsonencode(each.value.environment-variables[*])}' > variables.json",
       "echo '${jsonencode(each.value.environment-variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
       "sed -i -e 's/\r$//' /home/ubuntu/setup.sh",
       "chmod +x /home/ubuntu/setup.sh",
