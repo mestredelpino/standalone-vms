@@ -14,8 +14,7 @@ vsphere-resource_pool  = ""                # The resource pool to be used by thi
 vsphere-host           = ""                # The ESXi host you will deploy this virtual machine to
 vsphere-network        = ""                # The network segment to be used by this virtual machine
 vsphere-network-cidr   = ""                # The CIDR of the "vsphere-network"
-
-vm-folder              = ""                # The name of the vSphere folder which will contain the deployed virtual machine(s)
+vsphere-vm-folder      = ""                # The name of the vSphere folder which will contain the deployed virtual machine(s)
 
 dhcp-vms = {
   example = {                              # Deploy example VM (will use /setup-scripts/example-setup.sh as startup script)
@@ -66,4 +65,13 @@ static-vms = {
 ```
 
 Create as many virtual machines as you want by reusing the provided templates above, but make sure that VMs you deploy match their startup script name.
+
+### Run the script
+
+In order to execute the script, open a terminal and run:
+
+```
+terraform init
+terraform apply
+```
 

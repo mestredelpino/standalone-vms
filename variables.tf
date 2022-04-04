@@ -47,7 +47,7 @@ variable "vsphere-network-cidr" {
   type = string
 }
 
-variable "vm-folder" {
+variable "vsphere-vm-folder" {
   description = "The name of the new vSphere folder where the concourse virtual machine will be located" 
   type = string
   default = ""

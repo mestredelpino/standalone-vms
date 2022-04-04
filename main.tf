@@ -43,8 +43,8 @@ data "vsphere_host" "host" {
 # Deploy VMs with an ip address assigned via DHCP
 # ---------------------------------------------------------------------------------------------------------------------
 
-resource "vsphere_folder" "vm_folder" {
-  path          = var.vm-folder
+resource "vsphere_folder" "vm-folder" {
+  path          = var.vsphere-vm-folder
   type          = "vm"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -60,7 +60,7 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
   num_cpus                   = each.value.cpu
   memory                     = each.value.memory
   host_system_id             = data.vsphere_host.host.id
-  folder                     = vsphere_folder.vm_folder.path
+  folder                     = vsphere_folder.vm-folder.path
   network_interface {
     network_id = data.vsphere_network.network.id
   }
@@ -127,7 +127,7 @@ resource "vsphere_virtual_machine" "focal-cloudserver" {
   wait_for_guest_net_timeout = 0
   wait_for_guest_ip_timeout  = 0
   datacenter_id              = data.vsphere_datacenter.dc.id
-  folder                     = vsphere_folder.vm_folder.path
+  folder                     = vsphere_folder.vm-folder.path
   network_interface {
     network_id = data.vsphere_network.network.id
   }
@@ -161,7 +161,7 @@ resource "vsphere_virtual_machine" "service-vm-static" {
   num_cpus                   = each.value.cpu
   memory                     = each.value.memory
   guest_id                   = "ubuntu64Guest"
-  folder                     = vsphere_folder.vm_folder.path
+  folder                     = vsphere_folder.vm-folder.path
   network_interface {
     network_id = data.vsphere_network.network.id
   }
