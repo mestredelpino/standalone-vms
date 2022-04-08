@@ -22,6 +22,9 @@ vsphere-network        = ""                # The network segment to be used by t
 vsphere-network-cidr   = ""                # The CIDR of the "vsphere-network"
 vsphere-vm-folder      = ""                # The name of the vSphere folder which will contain the deployed virtual machine(s)
 
+ssh-key-path           = ""                # Path to the private ssh key
+ssh-public-key-path    = ""                # Path to the public ssh key
+
 dhcp-vms = {
   example = {                              # Deploy example VM (will use /setup-scripts/example-setup.sh as startup script)
     disk : 100,                            # The VM's disk storage in GB
