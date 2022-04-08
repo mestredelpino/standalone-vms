@@ -2,7 +2,13 @@
 
 This terraform scripts allow you to deploy vSphere virtual machines (with a static IP or DHCP allocated) and providing them with a custom startup script. 
 
-1. Create a file "terraform.tfvars" and paste these variables to deploy a virtual machine called <YOUR_VM_NAME>.
+1. Clone the repo
+
+```
+git clone https://github.com/mestredelpino/standalone-vms.git
+```
+
+2. Create a file "terraform.tfvars" and paste these variables to deploy a virtual machine called <YOUR_VM_NAME>.
 
 ```
 vsphere-user           = ""                # The username of the vSphere user to be used for this deployment
@@ -29,7 +35,7 @@ dhcp-vms = {
 }
 ```
 
-2. Create a file called <YOUR_VM_NAME>-setup.sh in the startup-scripts directory. This will be your startup script, that the VM will run at creation.
+3. Create a file called <YOUR_VM_NAME>-setup.sh in the startup-scripts directory. This will be your startup script, that the VM will run at creation.
 
 ## Example usage
 

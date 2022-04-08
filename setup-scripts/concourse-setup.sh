@@ -46,12 +46,9 @@ yq e -i '.concourse.web.bindPort= 80' concourse/values.yaml
 yq e -i ".concourse.ingress.enabled = true" concourse/values.yaml && service_fqdn="$hostname.$service_domain" yq e -i ".concourse.ingress.hosts = [ env(service_fqdn) ]" concourse/values.yaml
 service_externalUrl="http://"$hostname".$service_domain" yq e -i ".concourse.web.externalUrl = env(service_externalUrl)"  concourse/values.yaml
 
-
-
 # Edit the admin user
 service_root=$service_root yq e -i ".concourse.web.auth.mainTeam.localUser = env(service_root)"  concourse/values.yaml
-concourse_credentials="$concourse_username:$concourse_password" yq e -i ".secrets.localUsers = env(concourse_password)"  concourse/values.yaml
-
+localUser_secret="$service_root:$service_root_password" yq e -i ".secrets.localUsers = env(localUser_secret)" concourse/values.yaml
 
 helm install concourse concourse/concourse --values concourse/values.yaml
 
@@ -90,6 +87,7 @@ kubectl apply -f /home/ubuntu/ingress.yaml
 kubectl patch svc $concourse_deployment -p '{"spec": {"ports": [{"port": 80,"targetPort": 80}],"type": "NodePort"}}'
 while [ $(kubectl get pods -l app=$concourse_selector -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ] ; do echo "Waiting for Concourse CI to be ready" && sleep 10s; done
 echo "Concourse is running"
+
 
 
 
