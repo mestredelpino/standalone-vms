@@ -69,13 +69,3 @@ variable "static-vms" {
   description  = "The virtual machines to be deployed with a static IP address"
   default      = {}
 }
-
-variable "ssh-key-path" {
-  description = "Path to the private ssh key"
-  default = "~/.ssh/id_rsa"
-}
-
-variable "ssh-public-key-path" {
-  description = "Path to the public ssh key"
-  default = "~/.ssh/id_rsa.pub"
-}

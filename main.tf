@@ -83,14 +83,14 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
     properties = {
       "instance-id" = each.key
       "hostname"    = each.key
-      "public-keys" = file(var.ssh-public-key-path)
+      "public-keys" = file("~/.ssh/id_rsa.pub")
     }
   }
   connection {
     host        = self.default_ip_address
     timeout     = "30s"
     user        = "ubuntu"
-    private_key = file(var.ssh-key-path)
+    private_key = file("~/.ssh/id_rsa")
   }
 
   provisioner "file" {
@@ -192,14 +192,14 @@ resource "vsphere_virtual_machine" "service-vm-static" {
     properties = {
       "instance-id" = each.key
       "hostname"    = each.key
-      "public-keys" = file(var.ssh-public-key-path)
+      "public-keys" = file("~/.ssh/id_rsa.pub")
     }
   }
   connection {
     host        = self.default_ip_address
     timeout     = "30s"
     user        = "ubuntu"
-    private_key = file(var.ssh-key-path)
+    private_key = file("~/.ssh/id_rsa")
   }
 
   provisioner "file" {
@@ -224,14 +224,4 @@ resource "vsphere_virtual_machine" "service-vm-static" {
   depends_on = [
     vsphere_virtual_machine.focal-cloudserver[0]
   ]
-}
-
-variable "ssh-key-path" {
-  default = "~/.ssh/id_rsa"
-  
-}
-
-variable "ssh-public-key-path" {
-  default = "~/.ssh/id_rsa.pub"
-  
 }
