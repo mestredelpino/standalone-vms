@@ -51,7 +51,7 @@ resource "vsphere_folder" "vm-folder" {
 
 resource "vsphere_virtual_machine" "service-vm-dhcp" {
   for_each = { for eachvalue, record in var.dhcp-vms : eachvalue => record }
-  name                       = "standalone-${each.key}-dhcp"
+  name                       = "standalone-${each.value.name}-dhcp"
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   datacenter_id              = data.vsphere_datacenter.dc.id
@@ -81,8 +81,8 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
   }
   vapp {
     properties = {
-      "instance-id" = each.key
-      "hostname"    = each.key
+      "instance-id" = each.value.name
+      "hostname"    = each.value.name
       "public-keys" = file("~/.ssh/id_rsa.pub")
     }
   }
@@ -95,13 +95,13 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
 
   provisioner "file" {
     # Copy install scripts.
-    source      = "./setup-scripts/${each.key}-setup.sh"
+    source      = "./setup-scripts/${each.value.name}-setup.sh"
     destination = "/home/ubuntu/setup.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "echo ${self.default_ip_address} ${each.key} | sudo tee -a /etc/hosts",
+      "echo ${self.default_ip_address} ${each.value.name} | sudo tee -a /etc/hosts",
       "sudo apt update && sudo apt install -y jq & sudo snap install yq",
       "echo '${jsonencode(each.value.environment-variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
       "sed -i -e 's/\r$//' /home/ubuntu/setup.sh",
@@ -153,7 +153,7 @@ data "vsphere_virtual_machine" "ubuntu_template" {
 
 resource "vsphere_virtual_machine" "service-vm-static" {
   for_each = { for eachvalue, record in var.static-vms  : eachvalue => record }
-  name                       = "standalone-${each.key}-static"
+  name                       = "standalone-${each.value.name}-static"
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   wait_for_guest_net_timeout = -1
@@ -174,7 +174,7 @@ resource "vsphere_virtual_machine" "service-vm-static" {
     template_uuid = data.vsphere_virtual_machine.ubuntu_template[0].id
        customize {
         linux_options {
-          host_name = each.key
+          host_name = each.value.name
           domain = ""#each.value.environment-variables.service_domain
         }
       network_interface {
@@ -190,8 +190,8 @@ resource "vsphere_virtual_machine" "service-vm-static" {
   }
   vapp {
     properties = {
-      "instance-id" = each.key
-      "hostname"    = each.key
+      "instance-id" = each.value.name
+      "hostname"    = each.value.name
       "public-keys" = file("~/.ssh/id_rsa.pub")
     }
   }
@@ -204,14 +204,14 @@ resource "vsphere_virtual_machine" "service-vm-static" {
 
   provisioner "file" {
     # Copy install scripts.
-    source      = "./setup-scripts/${each.key}-setup.sh"
+    source      = "./setup-scripts/${each.value.name}-setup.sh"
     destination = "/home/ubuntu/setup.sh"
   }
 
 # Provide environment variables to the VM and run the setup script
   provisioner "remote-exec" {
     inline = [
-      "echo ${self.default_ip_address} ${each.key} | sudo tee -a /etc/hosts",
+      "echo ${self.default_ip_address} ${each.value.name} | sudo tee -a /etc/hosts",
       "sudo apt update && sudo apt install -y jq & sudo snap install yq",
       "echo '${jsonencode(each.value.environment-variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
       "sed -i -e 's/\r$//' /home/ubuntu/setup.sh",
@@ -225,3 +225,4 @@ resource "vsphere_virtual_machine" "service-vm-static" {
     vsphere_virtual_machine.focal-cloudserver[0]
   ]
 }
+

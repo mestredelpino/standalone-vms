@@ -24,6 +24,7 @@ vsphere-vm-folder      = ""                # The name of the vSphere folder whic
 
 dhcp-vms = {
   example = {                              # Deploy example VM (will use /setup-scripts/example-setup.sh as startup script)
+    name: example                          # The VM's hostname
     disk : 100,                            # The VM's disk storage in GB
     cpu : 2,                               # The VM's number of vCPUs
     memory : 4000,                         # The VM's memory in MB
@@ -46,6 +47,7 @@ For deploying them with static IP addresses, use these variables:
 focal-cloudserver-name = ""                         # The name for the ubuntu-server template VM (default is ubuntu-server-template)
 static-vms = {
   minio = {                                         # Deploy MinIO (cloud-native storage, will use setup-scripts/minio-setup.sh as startup script)
+    name: minio                                     # The VM's hostname (will be used by setup script as helm chart to install)
     disk : 100,                                     # The VM's disk storage in GB
     cpu : 2,                                        # The VM's number of vCPUs
     memory : 4000,                                  # The VM's memory in MB
@@ -57,6 +59,7 @@ static-vms = {
     }
   },
   concourse = {                                     # Deploy Concourse CI (CI tool, will use setup-scripts/concourse-setup.sh as startup script)
+    name: concourse                                 # The VM's hostname (will be used by setup script as helm chart to install)
     disk : 100,                                     # The VM's disk storage in GB
     cpu : 2,                                        # The VM's number of vCPUs
     memory : 4000,                                  # The VM's memory in MB
