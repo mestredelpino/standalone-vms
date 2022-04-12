@@ -61,10 +61,12 @@ variable "focal-cloudserver-name" {
 
 variable "dhcp-vms" {
   description = "The virtual machines to be deployed with a dynamic IP address"
-  default = {}
+  default      = []
+  type         = list
 }
 
 variable "static-vms" {
   description  = "The virtual machines to be deployed with a static IP address"
-  default      = {}
+  default      = []
+  type         = list
 }
