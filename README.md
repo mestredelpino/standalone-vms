@@ -22,18 +22,19 @@ vsphere-network        = ""                # The network segment to be used by t
 vsphere-network-cidr   = ""                # The CIDR of the "vsphere-network"
 vsphere-vm-folder      = ""                # The name of the vSphere folder which will contain the deployed virtual machine(s)
 
-dhcp-vms = {
-  example = {                              # Deploy example VM (will use /setup-scripts/example-setup.sh as startup script)
-    name: example                          # The VM's hostname
-    disk : 100,                            # The VM's disk storage in GB
-    cpu : 2,                               # The VM's number of vCPUs
-    memory : 4000,                         # The VM's memory in MB
-    environment-variables = {              # Environment variables to be passed to your VM (at ~/.env)
-      environment_variable1 = "dummy"      # Environment variable example 
-      environment_variable2 = "dummy2"     # Environment variable example 
-    }
-  }
-}
+dhcp-vms = [
+      {
+        name: "example"
+        disk : 100,
+        cpu : 2,
+        memory : 4000,
+        ip_address : "10.1.1.15",
+        environment-variables = {
+          variable1           = "dummy"
+          variable2           = "dummy2"
+        }
+      }
+]
 ```
 
 3. Create a file called <YOUR_VM_NAME>-setup.sh in the startup-scripts directory. This will be your startup script, that the VM will run at creation.
@@ -45,12 +46,12 @@ For deploying them with static IP addresses, use these variables:
 
 ```
 focal-cloudserver-name = ""                         # The name for the ubuntu-server template VM (default is ubuntu-server-template)
-static-vms = {
-  minio = {                                         # Deploy MinIO (cloud-native storage, will use setup-scripts/minio-setup.sh as startup script)
-    name: minio                                     # The VM's hostname (will be used by setup script as helm chart to install)
-    disk : 100,                                     # The VM's disk storage in GB
-    cpu : 2,                                        # The VM's number of vCPUs
-    memory : 4000,                                  # The VM's memory in MB
+static-vms = [
+  {                                                 # Deploy MinIO (cloud-native storage, will use setup-scripts/minio-setup.sh as startup script)
+    name = "minio"                                  # The VM's hostname (and helm chart to install)
+    disk = 100,                                     # The VM's disk storage in GB
+    cpu = 2,                                        # The VM's number of vCPUs
+    memory = 4000,                                  # The VM's memory in MB
     ip_address : "10.0.0.3"                         # The static IP address for this VM
     environment-variables = {                       # Environment variables to be passed to your VM (at ~/.env)
       service_domain           = "yourdomain.com"   # DNS domain to be used by the MinIO service
@@ -58,19 +59,19 @@ static-vms = {
       service_root_password    = "password123"      # Root username to be used by the MinIO service
     }
   },
-  concourse = {                                     # Deploy Concourse CI (CI tool, will use setup-scripts/concourse-setup.sh as startup script)
-    name: concourse                                 # The VM's hostname (will be used by setup script as helm chart to install)
-    disk : 100,                                     # The VM's disk storage in GB
-    cpu : 2,                                        # The VM's number of vCPUs
-    memory : 4000,                                  # The VM's memory in MB
-    ip_address : "10.0.0.4"                         # The static IP address for this VM
+ {                                                  # Deploy Concourse CI (CI tool, will use setup-scripts/concourse-setup.sh as startup script)
+    name: "concourse"                               # The VM's hostname (and helm chart to install)
+    disk = 100,                                     # The VM's disk storage in GB
+    cpu = 2,                                        # The VM's number of vCPUs
+    memory = 4000,                                  # The VM's memory in MB
+    ip_address = "10.0.0.4"                         # The static IP address for this VM
     environment-variables = {                       # Environment variables to be passed to your VM (at ~/.env)
       service_domain           = "yourdomain.com"   # DNS domain to be used by the Concourse service
       service_root             = "admin"            # Root username to be used by the Concourse service
       service_root_password    = "password123"      # Root username to be used by the Concourse service
     }
   }
-}
+]
 ```
 
 Create as many virtual machines as you want by reusing the provided templates above, but make sure that VMs you deploy match their startup script name.
