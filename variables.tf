@@ -26,6 +26,7 @@ variable "vsphere-datastore" {
 variable "vsphere-resource_pool" {
   description = "The name of your vSphere resource pool"
   type = string
+  default = "Resources"
 }
 
 variable "vsphere-host" {

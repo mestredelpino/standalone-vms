@@ -12,8 +12,6 @@ sudo apt-get -y install docker.io
 sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker
 sudo usermod -aG docker ubuntu
 
-
-
 # Install kubectl
 curl -LO https://dl.k8s.io/release/v1.20.1/bin/linux/amd64/kubectl
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
