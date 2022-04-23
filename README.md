@@ -29,6 +29,8 @@ dhcp-vms = [
         cpu : 2,
         memory : 4000,
         ip_address : "10.1.1.15",
+        vm-name: "example-standalone"
+        startup-script: "example-setup.sh",
         environment-variables = {
           variable1           = "dummy"
           variable2           = "dummy2"
@@ -52,7 +54,9 @@ static-vms = [
     disk = 100,                                     # The VM's disk storage in GB
     cpu = 2,                                        # The VM's number of vCPUs
     memory = 4000,                                  # The VM's memory in MB
-    ip_address : "10.0.0.3"                         # The static IP address for this VM
+    ip_address : "10.0.0.3",                        # The static IP address for this VM
+    vm-name: "minio-standalone",                    # The name of this VM
+    startup-script: "minio-setup.sh",               # The startup shell script to run when this VM powers on for the first time
     environment-variables = {                       # Environment variables to be passed to your VM (at ~/.env)
       service_domain           = "yourdomain.com"   # DNS domain to be used by the MinIO service
       service_root             = "admin"            # Root username to be used by the MinIO service
@@ -61,10 +65,12 @@ static-vms = [
   },
  {                                                  # Deploy Concourse CI (CI tool, will use setup-scripts/concourse-setup.sh as startup script)
     name: "concourse"                               # The VM's hostname (and helm chart to install)
-    disk = 100,                                     # The VM's disk storage in GB
+    disk = 50,                                      # The VM's disk storage in GB
     cpu = 2,                                        # The VM's number of vCPUs
     memory = 4000,                                  # The VM's memory in MB
-    ip_address = "10.0.0.4"                         # The static IP address for this VM
+    ip_address = "10.0.0.4",                        # The static IP address for this VM
+    vm-name: "concourse-standalone",                # The name of this VM
+    startup-script: "concourse-setup.sh",           # The startup shell script to run when this VM powers on for the first time
     environment-variables = {                       # Environment variables to be passed to your VM (at ~/.env)
       service_domain           = "yourdomain.com"   # DNS domain to be used by the Concourse service
       service_root             = "admin"            # Root username to be used by the Concourse service

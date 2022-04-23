@@ -39,10 +39,10 @@ data "vsphere_host" "host" {
 
 locals {
   dhcp-vms = {
-    for name, vm in var.dhcp-vms : vm.name => vm
+    for name, vm in var.dhcp-vms : vm.vm-name => vm
   }
   static-vms = {
-    for name, vm in var.static-vms : vm.name => vm
+    for name, vm in var.static-vms : vm.vm-name => vm
   }
 }
 
@@ -57,9 +57,10 @@ resource "vsphere_folder" "vm-folder" {
 }
 
 
+
 resource "vsphere_virtual_machine" "service-vm-dhcp" {
-  for_each =  { for index, vm in local.dhcp-vms: vm.name => vm }
-  name                       = "standalone-${each.key}-dhcp"
+  for_each =  { for index, vm in local.dhcp-vms: vm.vm-name => vm }
+  name                       = each.value.vm-name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   datacenter_id              = data.vsphere_datacenter.dc.id
@@ -103,7 +104,7 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
 
   provisioner "file" {
     # Copy install scripts.
-    source      = "./setup-scripts/${each.key}-setup.sh"
+    source      = "./setup-scripts/${each.value.startup-script}"
     destination = "/home/ubuntu/setup.sh"
   }
 
@@ -160,8 +161,8 @@ data "vsphere_virtual_machine" "ubuntu_template" {
 }
 
 resource "vsphere_virtual_machine" "service-vm-static" {
-  for_each =  { for index, vm in local.static-vms: vm.name => vm }
-  name                       = "standalone-${each.key}-static"
+  for_each =  { for index, vm in local.static-vms: vm.vm-name => vm }
+  name                       = each.value.vm-name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   wait_for_guest_net_timeout = -1
@@ -212,7 +213,7 @@ resource "vsphere_virtual_machine" "service-vm-static" {
 
   provisioner "file" {
     # Copy install scripts.
-    source      = "./setup-scripts/${each.key}-setup.sh"
+    source      = "./setup-scripts/${each.value.startup-script}"
     destination = "/home/ubuntu/setup.sh"
   }
 
