@@ -11,26 +11,26 @@ git clone https://github.com/mestredelpino/standalone-vms.git
 2. Create a file "terraform.tfvars" and paste these variables to deploy a virtual machine called <YOUR_VM_NAME>.
 
 ```
-vsphere-user           = ""                # The username of the vSphere user to be used for this deployment
-vsphere-password       = ""                # The password of the vSphere user to be used for this deployment
-vsphere-server         = ""                # The vSphere server (IP address or FQDN)
-vsphere-datacenter     = ""                # The vSphere Datacenter you will deploy this virtual machine to
-vsphere-datastore      = ""                # The datastore you will deploy this virtual machine to
-vsphere-resource_pool  = ""                # The resource pool to be used by this virtual machine (optional)
-vsphere-host           = ""                # The ESXi host you will deploy this virtual machine to
-vsphere-network        = ""                # The network segment to be used by this virtual machine
-vsphere-network-cidr   = ""                # The CIDR of the "vsphere-network"
-vsphere-vm-folder      = ""                # The name of the vSphere folder which will contain the deployed virtual machine(s)
+vsphere_user           = ""                # The username of the vSphere user to be used for this deployment
+vsphere_password       = ""                # The password of the vSphere user to be used for this deployment
+vsphere_server         = ""                # The vSphere server (IP address or FQDN)
+vsphere_datacenter     = ""                # The vSphere Datacenter you will deploy this virtual machine to
+vsphere_datastore      = ""                # The datastore you will deploy this virtual machine to
+vsphere_resource_pool  = ""                # The resource pool to be used by this virtual machine (optional)
+vsphere_host           = ""                # The ESXi host you will deploy this virtual machine to
+vsphere_network        = ""                # The network segment to be used by this virtual machine
+vsphere_network_cidr   = ""                # The CIDR of the "vsphere-network"
+vsphere_vm_folder      = ""                # The name of the vSphere folder which will contain the deployed virtual machine(s)
 
 dhcp-vms = [
       {
-        name: "example"
-        disk : 100,
-        cpu : 2,
-        memory : 4000,
-        ip_address : "10.1.1.15",
-        vm-name: "example-standalone"
-        startup-script: "example-setup.sh",
+        name = "example"
+        disk = 100,
+        cpu = 2,
+        memory = 4000,
+        ip_address = "10.1.1.15",
+        vm_name = "example-standalone"
+        startup_script = "example-setup.sh",
         environment-variables = {
           variable1           = "dummy"
           variable2           = "dummy2"
@@ -48,15 +48,15 @@ For deploying them with static IP addresses, use these variables:
 
 ```
 focal-cloudserver-name = ""                         # The name for the ubuntu-server template VM (default is ubuntu-server-template)
-static-vms = [
+static_vms = [
   {                                                 # Deploy MinIO (cloud-native storage, will use setup-scripts/minio-setup.sh as startup script)
     name = "minio"                                  # The VM's hostname (and helm chart to install)
     disk = 100,                                     # The VM's disk storage in GB
     cpu = 2,                                        # The VM's number of vCPUs
     memory = 4000,                                  # The VM's memory in MB
-    ip_address : "10.0.0.3",                        # The static IP address for this VM
-    vm-name: "minio-standalone",                    # The name of this VM
-    startup-script: "minio-setup.sh",               # The startup shell script to run when this VM powers on for the first time
+    ip_address = "10.0.0.3",                        # The static IP address for this VM
+    vm_name = "minio-standalone",                   # The name of this VM
+    startup_script = "minio-setup.sh",              # The startup shell script to run when this VM powers on for the first time
     environment-variables = {                       # Environment variables to be passed to your VM (at ~/.env)
       service_domain           = "yourdomain.com"   # DNS domain to be used by the MinIO service
       service_root             = "admin"            # Root username to be used by the MinIO service
@@ -64,13 +64,13 @@ static-vms = [
     }
   },
  {                                                  # Deploy Concourse CI (CI tool, will use setup-scripts/concourse-setup.sh as startup script)
-    name: "concourse"                               # The VM's hostname (and helm chart to install)
+    name = "concourse"                              # The VM's hostname (and helm chart to install)
     disk = 50,                                      # The VM's disk storage in GB
     cpu = 2,                                        # The VM's number of vCPUs
     memory = 4000,                                  # The VM's memory in MB
     ip_address = "10.0.0.4",                        # The static IP address for this VM
-    vm-name: "concourse-standalone",                # The name of this VM
-    startup-script: "concourse-setup.sh",           # The startup shell script to run when this VM powers on for the first time
+    vm_name = "concourse-standalone",               # The name of this VM
+    startup_script = "concourse-setup.sh",          # The startup shell script to run when this VM powers on for the first time
     environment-variables = {                       # Environment variables to be passed to your VM (at ~/.env)
       service_domain           = "yourdomain.com"   # DNS domain to be used by the Concourse service
       service_root             = "admin"            # Root username to be used by the Concourse service

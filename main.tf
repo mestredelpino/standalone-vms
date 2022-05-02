@@ -7,42 +7,42 @@ terraform {
 }
 
 provider "vsphere" {
-  user                 = var.vsphere-user
-  password             = var.vsphere-password
-  vsphere_server       = var.vsphere-server
+  user                 = var.vsphere_user
+  password             = var.vsphere_password
+  vsphere_server       = var.vsphere_server
   allow_unverified_ssl = true
 }
 
 data "vsphere_network" "network" {
-  name          = var.vsphere-network
+  name          = var.vsphere_network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_datacenter" "dc" {
-  name = var.vsphere-datacenter
+  name = var.vsphere_datacenter
 }
 
 data "vsphere_datastore" "datastore" {
-  name          = var.vsphere-datastore
+  name          = var.vsphere_datastore
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_resource_pool" "resource_pool" {
-  name          = var.vsphere-resource_pool
+  name          = var.vsphere_resource_pool
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 data "vsphere_host" "host" {
-  name          = var.vsphere-host
+  name          = var.vsphere_host
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 locals {
   dhcp-vms = {
-    for name, vm in var.dhcp-vms : vm.vm-name => vm
+    for name, vm in var.dhcp_vms : vm.vm_name => vm
   }
   static-vms = {
-    for name, vm in var.static-vms : vm.vm-name => vm
+    for name, vm in var.static_vms : vm.vm_name => vm
   }
 }
 
@@ -51,7 +51,7 @@ locals {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "vsphere_folder" "vm-folder" {
-  path          = var.vsphere-vm-folder
+  path          = var.vsphere_vm_folder
   type          = "vm"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -59,8 +59,8 @@ resource "vsphere_folder" "vm-folder" {
 
 
 resource "vsphere_virtual_machine" "service-vm-dhcp" {
-  for_each =  { for index, vm in local.dhcp-vms: vm.vm-name => vm }
-  name                       = each.value.vm-name
+  for_each =  { for index, vm in local.dhcp-vms: vm.vm_name => vm }
+  name                       = each.value.vm_name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   datacenter_id              = data.vsphere_datacenter.dc.id
@@ -104,7 +104,7 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
 
   provisioner "file" {
     # Copy install scripts.
-    source      = "./setup-scripts/${each.value.startup-script}"
+    source      = "./setup-scripts/${each.value.startup_script}"
     destination = "/home/ubuntu/setup.sh"
   }
 
@@ -112,7 +112,7 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
     inline = [
       "echo ${self.default_ip_address} ${each.key} | sudo tee -a /etc/hosts",
       "sudo apt update && sudo apt install -y jq & sudo snap install yq",
-      "echo '${jsonencode(each.value.environment-variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
+      "echo '${jsonencode(each.value.environment_variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
       "sed -i -e 's/\r$//' /home/ubuntu/setup.sh",
       "chmod +x /home/ubuntu/setup.sh",
       "sh /home/ubuntu/setup.sh",
@@ -129,7 +129,7 @@ resource "vsphere_virtual_machine" "service-vm-dhcp" {
 
 resource "vsphere_virtual_machine" "focal-cloudserver" {
   count                      = length(local.static-vms) > 0 ? 1:0
-  name                       = var.focal-cloudserver-name
+  name                       = var.focal_cloudserver_name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   host_system_id             = data.vsphere_host.host.id
@@ -161,8 +161,8 @@ data "vsphere_virtual_machine" "ubuntu_template" {
 }
 
 resource "vsphere_virtual_machine" "service-vm-static" {
-  for_each =  { for index, vm in local.static-vms: vm.vm-name => vm }
-  name                       = each.value.vm-name
+  for_each =  { for index, vm in local.static-vms: vm.vm_name => vm }
+  name                       = each.value.vm_name
   resource_pool_id           = data.vsphere_resource_pool.resource_pool.id
   datastore_id               = data.vsphere_datastore.datastore.id
   wait_for_guest_net_timeout = -1
@@ -190,8 +190,8 @@ resource "vsphere_virtual_machine" "service-vm-static" {
         ipv4_address = each.value.ip_address
         ipv4_netmask = 24# CHANGE REGEX
       }
-      dns_server_list = [ cidrhost(var.vsphere-network-cidr, 1) ]
-      ipv4_gateway = cidrhost(var.vsphere-network-cidr, 1)
+      dns_server_list = [ cidrhost(var.vsphere_network_cidr, 1) ]
+      ipv4_gateway = cidrhost(var.vsphere_network_cidr, 1)
     }
   }
   cdrom {
@@ -213,7 +213,7 @@ resource "vsphere_virtual_machine" "service-vm-static" {
 
   provisioner "file" {
     # Copy install scripts.
-    source      = "./setup-scripts/${each.value.startup-script}"
+    source      = "./setup-scripts/${each.value.startup_script}"
     destination = "/home/ubuntu/setup.sh"
   }
 
@@ -222,7 +222,7 @@ resource "vsphere_virtual_machine" "service-vm-static" {
     inline = [
       "echo ${self.default_ip_address} ${each.key} | sudo tee -a /etc/hosts",
       "sudo apt update && sudo apt install -y jq & sudo snap install yq",
-      "echo '${jsonencode(each.value.environment-variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
+      "echo '${jsonencode(each.value.environment_variables[*])}'  |  sed 's/^.//;s/.$//' | yq -P '.'  | sed 's/:/=/' | sed -e 's/[\t ]//g;/^$/d' > .env",
       "sed -i -e 's/\r$//' /home/ubuntu/setup.sh",
       "chmod +x /home/ubuntu/setup.sh",
       "sh /home/ubuntu/setup.sh",
