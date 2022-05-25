@@ -11,6 +11,7 @@ provider "vsphere" {
   password             = var.vsphere_password
   vsphere_server       = var.vsphere_server
   allow_unverified_ssl = true
+  version = "2.1.1"
 }
 
 data "vsphere_network" "network" {
