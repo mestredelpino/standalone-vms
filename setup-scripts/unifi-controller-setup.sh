@@ -10,6 +10,8 @@ sudo apt-get install openjdk-8-jre-headless -y
 
 sudo apt install ca-certificates apt-transport-https -y
 
+sleep 20s
+
 sudo apt-get update
 sudo apt-get install unifi -y
 
